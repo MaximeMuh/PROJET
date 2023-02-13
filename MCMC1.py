@@ -49,15 +49,21 @@ def MH(x0,N,fonct):
     l=np.array(l)
     if (fonct==V):
         l=abs(l)%1
-        plt.hist(l,bins=50,density=True ,color="lightblue")
+        plt.hist(l,bins=50,density=True ,color="lightblue",edgecolor='blue')
+        plt.title("Echantillonage selon MH pour V(x)=cos(2*π*x),N=10^6,dt=0.1")
         l2=np.arange(0,1,0.001)
         A=scipy.integrate.quad(fonct,0,1)[0]
     else:
-        l2=np.arange(-5*sigma+nu,nu+5*sigma,0.001)
-        plt.hist(l,bins=50,density=True ,color="lightblue")
+        if fonct==f:
+            l2=np.arange(-5*sigma+nu,nu+5*sigma,0.001)
+            plt.title("Echantillonage selon MH d'une gausienne,nu=10,sigma=4,N=10^6,dt=0.1")
+        else:
+            l2=np.arange(-5,5,0.001)
+            plt.title("Echantillonage selon MH , N=10^6,dt=0.1")
+        plt.hist(l,bins=50,density=True ,color="lightblue",edgecolor='blue')
         A=scipy.integrate.quad(fonct,-100,100)[0]
     y=fonct(l2)/A
-    plt.plot(l2,y)
+    plt.plot(l2,y,color='green')
     plt.show()
 
 
