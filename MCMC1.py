@@ -7,8 +7,10 @@ Created on Sat Feb 11 15:27:40 2023
 import math
 import numpy as np
 from matplotlib import pyplot as plt
+nu=0
+sigma=4
 def f(x):
-    return (1/np.sqrt(2*np.pi))*np.exp(-(x**2)/2)
+    return (1/np.sqrt(2*np.pi*(sigma**2)))*np.exp(-((x-nu)**2)/(2*(sigma**2)))
 def f2(x):
     return np.exp(-(abs(x)))/2
 
@@ -39,8 +41,10 @@ def MH(x0,N):
     l=np.array(l)
     print(l)
     plt.hist(l,bins=50,density=True ,color="lightblue")
-    l2=np.arange(-7,7,0.001)
+    l2=np.arange(-5*sigma+nu,nu+5*sigma,0.001)
     y=f(l2)
     plt.plot(l2,y)
     plt.show()
+
+
 
