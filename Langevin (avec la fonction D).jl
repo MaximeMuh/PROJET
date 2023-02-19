@@ -30,7 +30,7 @@ for k = 1:(N-1)
     candidat = Lq[k] + (-D(Lq[k]) * deriv_V(Lq[k]) + deriv_D(Lq[k])) * dt + sqrt(2 * D(Lq[k]) * dt) * rand(G)
 
 
-    # Metropolis-Hastings, on calcule log_alpha car c'est plus rapide
+    # Metropolis-Hastings
     alpha= min(1,(exp(-V(candidat))*q(candidat, Lq[k])/ exp(-V(Lq[k]))*q(Lq[k], candidat)))
 
     if (rand(U)) <= alpha
