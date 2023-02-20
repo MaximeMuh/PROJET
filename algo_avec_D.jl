@@ -8,25 +8,32 @@ frequence = 1 # Frequence du potentiel V (qui est un cosinus)
 nb_bins = 100 # Nombre de bins pour l'affichage de l'histogramme 
               # et nombre de point pour le trace de mu
 
-V(x) = cos(2 * pi * frequence * x)
+V(x) = cos(2 * pi * frequence * x) # Potentiel
 grad_V(x) = -2 * pi * sin(2 * pi * frequence * x)
-U = Uniform()
-G = Normal()
+D(x) = 1.5 + cos(2 * pi * x)
+div_D(x) = -2 * pi * sin(2 * pi * x)
+U = Uniform() # Loi uniforme
+G = Normal() # Gaussienne centree reduite
+
+# attention : 
+log_q(x, y) = - (x - y + dt * (D(y) * grad_V(y) - div_D(y)))^2 / (4 * D(y) * dt) - log(D(y)) / 2
 
 # Lq contiendra la suite finie des configurations
 Lq = zeros(Float32, N)
 
 for k = 1:(N-1)
-    # On calcule la nouvelle configuration a partir de l'equation de Langevin
-    candidat = Lq[k] - grad_V(Lq[k]) * dt + sqrt(2 * dt) * rand(G)
+    q_k = Lq[k]
 
-    # Metropolis-Hastings, on calcule log_alpha car c'est plus rapide
-    log_alpha = min(0, V(Lq[k]) - V(candidat) + ((candidat - Lq[k] + dt * grad_V(Lq[k]))^2
-    - (Lq[k] - candidat + dt * grad_V(candidat))^2) / (4 * dt))
+    # On calcule la nouvelle configuration a partir de l'equation de Langevin
+    candidat = q_k + (-D(q_k) * grad_V(q_k) + div_D(q_k))* dt + sqrt(2 * D(q_k) * dt) * rand(G)
+
+    # Metropolis-Hastings, on calcule log_alpha car c'est plus rapide   
+    log_alpha = min(0, V(q_k) - V(candidat) + log_q(q_k, candidat) - log_q(candidat, q_k))
+                    
     if log(rand(U)) <= log_alpha
         Lq[k + 1] = candidat
     else
-        Lq[k + 1] = Lq[k]
+        Lq[k + 1] = q_k
     end
 end
 
