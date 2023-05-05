@@ -5,7 +5,7 @@ using Random, Distributions, Plots, SciPy
 N = Int32(1e6) # Nombre de configurations calculees
 dt = 1e-3 # Pas de temps
 frequence = 1 # Frequence du potentiel V (qui est un cosinus)
-nb_bins = 100 # Nombre de bins pour l'affichage de l'histogramme 
+nb_bins = 50 # Nombre de bins pour l'affichage de l'histogramme 
               # et nombre de point pour le trace de mu
 
 V(x) = cos(2 * pi * frequence * x)
@@ -45,6 +45,7 @@ mu(x) = exp(-V(x)) / A
 
 # On realise le graphique et on l'affiche
 x = range(0, 1, length = nb_bins)
-histogram(Lq, bins = nb_bins, normalize=:true, label = "simulation dt=$dt N=$N",
-title = "Echantillonage pour V(x)=cos($(2 * frequence)*pi*x)")
-display(plot!(x, mu, label = "mu"))
+histogram(Lq, bins = nb_bins, normalize=:true, label = "simulation", fa = 0.5, xlabel = "x", ylabel = "y")
+display(plot!(x, mu, label = "mu", linewidth = 3))
+
+savefig("langevin_mi_rapport")
